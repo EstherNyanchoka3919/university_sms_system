@@ -1,0 +1,50 @@
+package com.university.sms.entity;
+
+import lombok.*;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "courses")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Course {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long courseId;
+
+    @Column(unique = true, nullable = false, length = 20)
+    private String courseCode;
+
+    @Column(nullable = false, length = 200)
+    private String courseName;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(nullable = false)
+    private Integer credits;
+
+    @Column(nullable = false)
+    private Integer capacity;
+
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private Integer currentEnrollment = 0;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<CourseOffering> courseOfferings = new HashSet<>();
+
+    private LocalDateTime createdDate = LocalDateTime.now();
+    private LocalDateTime updatedDate = LocalDateTime.now();
+
+    @Version
+    private Long version;
+}

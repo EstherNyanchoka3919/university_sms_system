@@ -1,0 +1,38 @@
+package com.university.sms.entity;
+
+import lombok.*;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "enrollments")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Enrollment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long enrollmentId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "student_id")
+    private Student student;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "course_offering_id")
+    private CourseOffering courseOffering;
+
+    @Column(nullable = false)
+    private LocalDateTime enrollmentDate;
+
+    @Enumerated(EnumType.STRING)
+    private EnrollmentStatus status = EnrollmentStatus.ENROLLED;
+
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private Integer attendancePercentage = 0;
+
+    public enum EnrollmentStatus {
+        ENROLLED, COMPLETED, DROPPED, WITHDRAWN
+    }
+}
